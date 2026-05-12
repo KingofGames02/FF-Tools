@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Fire Tools | King of Games</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
+
+        :root {
+            --bg: #0b0c10;
+            --card-bg: #14161c;
+            --gold: #D4AF37;
+            --gold-light: #F9F1CC;
+            --gold-dark: #997A15;
+            --text: #ffffff;
+            --muted: #a0a5b5;
+            --radius: 20px;
+            --border: rgba(212, 175, 55, 0.2);
+            --font-en: 'Poppins', sans-serif;
+            --font-ar: 'Cairo', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-en);
+        }
+
+        html[dir="rtl"] * {
+            font-family: var(--font-ar);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at top center, rgba(212, 175, 55, 0.08) 0%, transparent 60%);
+        }
+
+        .loader-container {
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 12, 16, 0.98);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--border);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite, glowPulse 2s infinite alternate;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+            100% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.6); }
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .header-container {
+            text-align: center;
+            margin-bottom: 50px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-title {
+            font-size: clamp(2.2rem, 6vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, var(--gold-light), var(--gold), var(--gold-light));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: textShine 4s linear infinite;
+        }
+
+        @keyframes textShine { to { background-position: 200% center; } }
+
+        .sub-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 8px 20px;
+            border-radius: 30px;
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 60px;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 30px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(60px) scale(0.95);
+            transition: opacity 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        border-color 0.4s, 
+                        box-shadow 0.4s;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.15), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .tool-card.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+
+        .tool-card.pop,
+        .tool-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--gold);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(212, 175, 55, 0.3);
+            z-index: 2;
+        }
+
+        .tool-card.pop::before,
+        .tool-card:hover::before {
+            opacity: 1;
+        }
+
+        .icon-wrapper {
+            width: 65px;
+            height: 65px;
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            color: var(--gold);
+            transition: all 0.4s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tool-card.visible .icon-wrapper {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .tool-card.pop .icon-wrapper,
+        .tool-card:hover .icon-wrapper {
+            background: var(--gold);
+            color: #000;
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
+        }
+
+        .icon-wrapper svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .tool-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tool-desc {
+            font-size: 0.95rem;
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 30px;
+            flex-grow: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #000;
+            z-index: 1;
+            text-transform: uppercase;
+        }
+
+        .btn-main:hover {
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .btn-main::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(45deg) translateY(-100%);
+            transition: 0.6s;
+        }
+
+        .btn-main:hover::after {
+            transform: rotate(45deg) translateY(100%);
+        }
+
+        .social-section {
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .social-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gold-light);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-direction: row;
+        }
+
+        .social-btn {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .social-btn:hover {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateY(-8px) scale(1.15);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .social-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding-bottom: 20px;
+            width: 100%;
+        }
+
+        bdo, span[dir="ltr"] {
+            unicode-bidi: isolate;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loadingOverlay" class="loader-container">
+        <div class="loader"></div>
+    </div>
+
+    <div class="header-container">
+        <h1 class="main-title" id="mainTitle">FREE FIRE TOOLS</h1>
+        <div class="sub-title" id="subTitle">MADE BY KING OF GAMES</div>
+    </div>
+
+    <main id="toolsGrid" class="tools-grid"></main>
+
+    <section class="social-section">
+        <h3 class="social-title" id="socialTitle">CONNECT WITH US</h3>
+        <div class="social-links">
+            <a href="https://www.instagram.com/_kingofgames02" target="_blank" class="social-btn" aria-label="Instagram">
+                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="https://t.me/FF_MENA_Updates" target="_blank" class="social-btn" aria-label="Telegram">
+                <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.888-.666 3.473-1.513 5.79-2.511 6.95-2.995 3.307-1.378 3.996-1.616 4.444-1.623z"/></svg>
+            </a>
+            <a href="https://linktr.ee/KingofGames02" target="_blank" class="social-btn" aria-label="Linktree">
+                <svg fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Linktree</title><path d="m13.73635 5.85251 4.00467-4.11665 2.3248 2.3808-4.20064 4.00466h5.9085v3.30473h-5.9365l4.22865 4.10766-2.3248 2.3338L12.0005 12.099l-5.74052 5.76852-2.3248-2.3248 4.22864-4.10766h-5.9375V8.12132h5.9085L3.93417 4.11666l2.3248-2.3808 4.00468 4.11665V0h3.4727zm-3.4727 10.30614h3.4727V24h-3.4727z"/></svg>
+            </a>
+        </div>
+    </section>
+
+    <footer class="footer" id="footerText"></footer>
+
+    <script>
+        const translations = {
+            en: {
+                mainTitle: "FREE FIRE TOOLS",
+                subTitle: "MADE BY KING OF GAMES",
+                btnOpen: "OPEN TOOL",
+                socialTitle: "CONNECT WITH US",
+                footer: "All rights reserved <span dir='ltr'>&copy; 2026 - King of Games</span>",
+                tools: [
+                    {
+                        title: "FF Events & Updates",
+                        desc: "Explore upcoming promotional banners and scheduled events for 15 global Free Fire servers.",
+                        url: "https://kingofgames02.github.io/FFGS-app/",
+                        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`
+                    },
+                    {
+                        title: "FF Items Library",
+                        desc: "A comprehensive database to easily browse, search, and filter all Free Fire items with their details.",
+                        url: "https://kingofgames02.github.io/Free-Fire-Items-Library/",
+                        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`
+                    },
+                    {
+                        title: "FF Wishlist Manager",
+                        desc: "Manage your guest account wishlist easily, add items by their IDs, and explore other players' wishlists.",
+                        url: "https://kingofgames02.github.io/FFWM-app/",
+                        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`
+                    },
+                    {
+                        title: "FF Patch Tracker",
+                        desc: "A precise live countdown timer tracking upcoming Free Fire patch updates and release dates.",
+                        url: "https://kingofgames02.github.io/Free-Fire-Patch-Tracker/",
+                        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`
+                    },
+                    {
+                        title: "FF Icons API",
+                        desc: "A fast API service to instantly extract high-quality PNG icons of in-game items using their ID or icon name.",
+                        url: "http://kog-ff-icons.vercel.app/",
+                        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
+                    },
+                    {
+                        title: "ASTC Decoder Tool",
+                        desc: "A fast web utility to decode and render Free Fire ASTC texture files directly in your browser.",
+                        url: "https://kingofgames02.github.io/astc_decoder_app/",
+                        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`
+                    }
+                ]
+            },
+            ar: {
+                mainTitle: "أدوات فري فاير",
+                subTitle: "تطوير KING OF GAMES",
+                btnOpen: "فتح الأداة",
+                socialTitle: "تواصل معنا",
+                footer: "جميع الحقوق محفوظة <span dir='ltr'>&copy; 2026 - King of Games</span>",
+                tools: [
+                    {
+                        title: "أحداث فري فاير",
+                        desc: "استعرض الصور الترويجية والأحداث المجدولة القادمة في فري فاير لـ 15 سيرفراً عالمياً.",
+                        url: "https://kingofgames02.github.io/FFGS-app/",
+                        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`
+                    },
+                    {
+                        title: "مكتبة عناصر فري فاير",
+                        desc: "مكتبة شاملة للبحث وتصفح جميع عناصر اللعبة باستخدام فلاتر مخصصة لعرض تفاصيلها.",
+                        url: "https://kingofgames02.github.io/Free-Fire-Items-Library/",
+                        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`
+                    },
+                    {
+                        title: "مدير قائمة الأمنيات",
+                        desc: "أداة لإدارة قائمة أمنيات حسابات الزوار، تتيح لك إضافة العناصر عبر معرفاتها واستعراض قوائم أمنيات اللاعبين الآخرين.",
+                        url: "https://kingofgames02.github.io/FFWM-app/",
+                        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`
+                    },
+                    {
+                        title: "متتبع تحديثات فري فاير",
+                        desc: "عداد زمني مباشر ودقيق لتتبع مواعيد تحديثات فري فاير القادمة بدقة.",
+                        url: "https://kingofgames02.github.io/Free-Fire-Patch-Tracker/",
+                        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`
+                    },
+                    {
+                        title: "API ايقونات فري فاير",
+                        desc: "خدمة API لطلب ايقونات عناصر فري فاير بصيغة PNG بدقة عالية عن طريق المعرف او اسم الايقونة.",
+                        url: "http://kog-ff-icons.vercel.app/",
+                        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
+                    },
+                    {
+                        title: "أداة فك تشفير ASTC",
+                        desc: "أداة ويب سريعة لفك تشفير ملفات ASTC الخاصة باللعبة وعرضها مباشرة داخل المتصفح.",
+                        url: "https://kingofgames02.github.io/astc_decoder_app/",
+                        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`
+                    }
+                ]
+            }
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentLang = urlParams.get('lang') === 'ar' ? 'ar' : 'en';
+
+        function applyLanguage() {
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+
+            const langData = translations[currentLang];
+
+            document.getElementById('mainTitle').innerHTML = langData.mainTitle;
+            document.getElementById('subTitle').innerHTML = langData.subTitle;
+            document.getElementById('socialTitle').innerHTML = langData.socialTitle;
+            document.getElementById('footerText').innerHTML = langData.footer;
+
+            renderToolsGrid();
+        }
+
+        function renderToolsGrid() {
+            const gridContainer = document.getElementById('toolsGrid');
+            gridContainer.innerHTML = '';
+            
+            const langData = translations[currentLang];
+
+            langData.tools.forEach(tool => {
+                const targetUrl = new URL(tool.url);
+                targetUrl.searchParams.set('lang', currentLang);
+
+                const cardHTML = `
+                    <div class="tool-card">
+                        <div class="icon-wrapper">
+                            ${tool.icon}
+                        </div>
+                        <h2 class="tool-title">${tool.title}</h2>
+                        <p class="tool-desc">${tool.desc}</p>
+                        <a href="${targetUrl.href}" target="_blank" class="btn-main">
+                            <span>${langData.btnOpen}</span>
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        </a>
+                    </div>
+                `;
+                gridContainer.innerHTML += cardHTML;
+            });
+
+            initScrollObserver();
+        }
+
+        function initScrollObserver() {
+            const observerOptions = {
+                threshold: 0.25,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const card = entry.target;
+                        card.classList.add('visible');
+                        
+                        setTimeout(() => {
+                            card.classList.add('pop');
+                            setTimeout(() => {
+                                card.classList.remove('pop');
+                            }, 500);
+                        }, 50);
+
+                        observer.unobserve(card);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.tool-card').forEach(card => {
+                observer.observe(card);
+            });
+        }
+
+        window.onload = function() {
+            applyLanguage();
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }, 600);
+        };
+    </script>
+</body>
+</html>
