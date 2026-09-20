@@ -1,9 +1,9 @@
-const CACHE_NAME = 'ff-tools-cache-v1';
+const CACHE_NAME = 'ff-tools-cache-v2';
 const urlsToCache = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon.png'
+  '/FF-Tools/',
+  '/FF-Tools/index.html',
+  '/FF-Tools/manifest.json',
+  '/FF-Tools/icon.png'
 ];
 
 self.addEventListener('install', event => {
@@ -15,6 +15,17 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
   event.waitUntil(clients.claim());
 });
 
