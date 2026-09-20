@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free Fire Tools | King of Games</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b0c10">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
@@ -40,7 +44,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 20px;
+            padding: 20px;
             overflow-x: hidden;
             background-image: radial-gradient(circle at top center, rgba(212, 175, 55, 0.08) 0%, transparent 60%);
         }
@@ -72,13 +76,71 @@
         }
 
         .hidden {
-            opacity: 0;
-            pointer-events: none;
+            display: none !important;
+        }
+
+        .top-header {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 10px 0;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            object-fit: cover;
+        }
+
+        .brand-name {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: 0.5px;
+        }
+
+        .install-btn {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .install-btn:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .install-btn svg {
+            width: 18px;
+            height: 18px;
         }
 
         .header-container {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -99,19 +161,6 @@
         }
 
         @keyframes textShine { to { background-position: 200% center; } }
-
-        .sub-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--gold);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            padding: 8px 20px;
-            border-radius: 30px;
-            background: rgba(212, 175, 55, 0.05);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
-        }
 
         .tools-grid {
             display: grid;
@@ -338,9 +387,19 @@
         <div class="loader"></div>
     </div>
 
+    <header class="top-header">
+        <div class="brand-container">
+            <img src="https://i.ibb.co/YFVL29wC/Kingof-Games-LOGO.jpg" alt="Logo" class="brand-logo">
+            <span class="brand-name">King of Games</span>
+        </div>
+        <button id="installAppBtn" class="install-btn hidden">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span id="installText">Install App</span>
+        </button>
+    </header>
+
     <div class="header-container">
         <h1 class="main-title" id="mainTitle">FREE FIRE TOOLS</h1>
-        <div class="sub-title" id="subTitle">MADE BY KING OF GAMES</div>
     </div>
 
     <main id="toolsGrid" class="tools-grid"></main>
@@ -366,15 +425,15 @@
         const translations = {
             en: {
                 mainTitle: "FREE FIRE TOOLS",
-                subTitle: "MADE BY KING OF GAMES",
                 btnOpen: "OPEN TOOL",
                 socialTitle: "CONNECT WITH US",
+                installApp: "Install App",
                 footer: "All rights reserved <span dir='ltr'>&copy; 2026 - King of Games</span>",
                 tools: [
                     {
                         title: "FF Events & Updates",
                         desc: "Explore upcoming promotional banners and scheduled events for 15 global Free Fire servers.",
-                        url: "https://kingofgames02.github.io/FFGS-app/",
+                        url: "https://kog-ff-events.vercel.app",
                         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`
                     },
                     {
@@ -386,18 +445,18 @@
                     {
                         title: "FF Wishlist Manager",
                         desc: "Manage your guest account wishlist easily, add items by their IDs, and explore other players' wishlists.",
-                        url: "https://kingofgames02.github.io/FFWM-app/",
+                        url: "https://kog-ff-wishlist.vercel.app",
                         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`
                     },
                     {
                         title: "Prime Store",
-                        desc: "Explore prime store on all servers",
-                        url: "https://kingofgames02.github.io/FF-PrimeStore/",
+                        desc: "Explore prime store on all servers.",
+                        url: "https://kog-ff-primestore.vercel.app",
                         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>`
                     },
                     {
                         title: "FF Achievements Library",
-                        desc: "Free Fire achievements info",
+                        desc: "Free Fire achievements info.",
                         url: "https://kingofgames02.github.io/FF-Achievement/",
                         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v6a5 5 0 0 1-10 0V4z"></path><path d="M7 4H5a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2"></path><path d="M17 4h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"></path></svg>`
                     },
@@ -408,30 +467,24 @@
                         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`
                     },
                     {
-                        title: "FF Icons API",
-                        desc: "A fast API service to instantly extract high-quality PNG icons of in-game items using their ID or icon name.",
-                        url: "http://kog-ff-icons-v1.vercel.app/",
-                        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
-                    },
-                    {
                         title: "ASTC Decoder Tool",
                         desc: "A fast web utility to decode and render Free Fire ASTC texture files directly in your browser.",
-                        url: "https://kingofgames02.github.io/astc_decoder_app/",
+                        url: "https://kingofgames02.github.io/astc_decoder_app",
                         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`
                     }
                 ]
             },
             ar: {
                 mainTitle: "أدوات فري فاير",
-                subTitle: "تطوير KING OF GAMES",
                 btnOpen: "فتح الأداة",
                 socialTitle: "تواصل معنا",
+                installApp: "تثبيت التطبيق",
                 footer: "جميع الحقوق محفوظة <span dir='ltr'>&copy; 2026 - King of Games</span>",
                 tools: [
                     {
                         title: "أحداث فري فاير",
                         desc: "استعرض الصور الترويجية والأحداث المجدولة القادمة في فري فاير لـ 15 سيرفراً عالمياً.",
-                        url: "https://kingofgames02.github.io/FFGS-app/",
+                        url: "https://kog-ff-events.vercel.app",
                         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`
                     },
                     {
@@ -443,18 +496,18 @@
                     {
                         title: "مدير قائمة الأمنيات",
                         desc: "أداة لإدارة قائمة أمنيات حسابات الزوار، تتيح لك إضافة العناصر عبر معرفاتها واستعراض قوائم أمنيات اللاعبين الآخرين.",
-                        url: "https://kingofgames02.github.io/FFWM-app/",
+                        url: "https://kog-ff-wishlist.vercel.app",
                         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`
                     },
                     {
                         title: "متجر برايم",
-                        desc: "استكشف متجر برايم في جميع السيرفرات",
-                        url: "https://kingofgames02.github.io/FF-PrimeStore/",
+                        desc: "استكشف متجر برايم في جميع السيرفرات.",
+                        url: "https://kog-ff-primestore.vercel.app",
                         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>`
                     },
                     {
                         title: "مكتبة الإنجازات",
-                        desc: "معلومات نظام الإنجازات في فري فاير",
+                        desc: "معلومات نظام الإنجازات في فري فاير.",
                         url: "https://kingofgames02.github.io/FF-Achievement/",
                         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v6a5 5 0 0 1-10 0V4z"></path><path d="M7 4H5a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2"></path><path d="M17 4h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"></path></svg>`
                     },
@@ -465,15 +518,9 @@
                         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`
                     },
                     {
-                        title: "API ايقونات فري فاير",
-                        desc: "خدمة API لطلب ايقونات عناصر فري فاير بصيغة PNG بدقة عالية عن طريق المعرف او اسم الايقونة.",
-                        url: "http://kog-ff-icons-v1.vercel.app/",
-                        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
-                    },
-                    {
                         title: "أداة فك تشفير ASTC",
                         desc: "أداة ويب سريعة لفك تشفير ملفات ASTC الخاصة باللعبة وعرضها مباشرة داخل المتصفح.",
-                        url: "https://kingofgames02.github.io/astc_decoder_app/",
+                        url: "https://kingofgames02.github.io/astc_decoder_app",
                         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`
                     }
                 ]
@@ -482,6 +529,7 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const currentLang = urlParams.get('lang') === 'ar' ? 'ar' : 'en';
+        let deferredPrompt;
 
         function applyLanguage() {
             document.documentElement.lang = currentLang;
@@ -490,9 +538,9 @@
             const langData = translations[currentLang];
 
             document.getElementById('mainTitle').innerHTML = langData.mainTitle;
-            document.getElementById('subTitle').innerHTML = langData.subTitle;
             document.getElementById('socialTitle').innerHTML = langData.socialTitle;
             document.getElementById('footerText').innerHTML = langData.footer;
+            document.getElementById('installText').innerText = langData.installApp;
 
             renderToolsGrid();
         }
@@ -504,9 +552,6 @@
             const langData = translations[currentLang];
 
             langData.tools.forEach(tool => {
-                const targetUrl = new URL(tool.url);
-                targetUrl.searchParams.set('lang', currentLang);
-
                 const cardHTML = `
                     <div class="tool-card">
                         <div class="icon-wrapper">
@@ -514,7 +559,7 @@
                         </div>
                         <h2 class="tool-title">${tool.title}</h2>
                         <p class="tool-desc">${tool.desc}</p>
-                        <a href="${targetUrl.href}" target="_blank" class="btn-main">
+                        <a href="${tool.url}" target="_blank" class="btn-main">
                             <span>${langData.btnOpen}</span>
                             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                         </a>
@@ -555,8 +600,36 @@
             });
         }
 
+        function initPWA() {
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('sw.js').catch(error => {
+                        console.log('ServiceWorker registration failed:', error);
+                    });
+                });
+            }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                document.getElementById('installAppBtn').classList.remove('hidden');
+            });
+
+            document.getElementById('installAppBtn').addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        document.getElementById('installAppBtn').classList.add('hidden');
+                    }
+                    deferredPrompt = null;
+                }
+            });
+        }
+
         window.onload = function() {
             applyLanguage();
+            initPWA();
             setTimeout(() => {
                 document.getElementById('loadingOverlay').classList.add('hidden');
             }, 600);
