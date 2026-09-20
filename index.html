@@ -527,8 +527,8 @@
             }
         };
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentLang = urlParams.get('lang') === 'ar' ? 'ar' : 'en';
+        const browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+        const currentLang = browserLang.startsWith('ar') ? 'ar' : 'en';
         let deferredPrompt;
 
         function applyLanguage() {
